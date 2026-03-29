@@ -40,6 +40,7 @@ const cartoons = [
     episodes: 26,
     years: "2022–2023",
     description: "Мальчик Рома очень любит играть, поэтому в его комнате полным-полно разных игрушек. Кого здесь только нет: и загадочный пушистый инопланетянин Бублик, и отважный петух-тянучка Ко-Ко, и благородная ящерица-самурай О-Раш, и милая куколка Пинки, и воинственный плюшевый заяц Генерал Де-Кроль со своими роботами, и, конечно, отважные супергерои Флай и Глория.",
+    cover: "https://cdn.poehali.dev/projects/d349c98d-057e-4569-9a59-641fbcea3d21/bucket/72e4bd5c-27ea-49cb-ac8a-078e6ce6e63e.jpeg",
     color: "#f59e0b",
     emoji: "🦸",
     seasons_data: [
@@ -610,16 +611,26 @@ function CartoonCard({
       onClick={() => onOpen(cartoon)}
     >
       <div
-        className="h-32 flex items-center justify-center text-7xl relative"
+        className="h-48 flex items-center justify-center text-7xl relative overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${cartoon.color}18 0%, ${cartoon.color}06 100%)` }}
       >
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{ background: `radial-gradient(circle at 50% 50%, ${cartoon.color}20 0%, transparent 70%)` }}
-        />
-        <span className="relative z-10 transform group-hover:scale-110 transition-transform duration-300">
-          {cartoon.emoji}
-        </span>
+        {cartoon.cover ? (
+          <img
+            src={cartoon.cover}
+            alt={cartoon.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: `radial-gradient(circle at 50% 50%, ${cartoon.color}20 0%, transparent 70%)` }}
+            />
+            <span className="relative z-10 transform group-hover:scale-110 transition-transform duration-300">
+              {cartoon.emoji}
+            </span>
+          </>
+        )}
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
