@@ -309,10 +309,14 @@ export default function Index() {
               />
               <div className="relative flex flex-col md:flex-row gap-6 items-start">
                 <div
-                  className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl flex-shrink-0"
+                  className="w-32 h-48 rounded-2xl flex-shrink-0 overflow-hidden flex items-center justify-center text-5xl"
                   style={{ background: `${selectedCartoon.color}22`, border: `1px solid ${selectedCartoon.color}33` }}
                 >
-                  {selectedCartoon.emoji}
+                  {selectedCartoon.cover ? (
+                    <img src={selectedCartoon.cover} alt={selectedCartoon.title} className="w-full h-full object-cover" />
+                  ) : (
+                    selectedCartoon.emoji
+                  )}
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
