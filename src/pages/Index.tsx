@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import HlsPlayer from "@/components/HlsPlayer";
 
 const episodes1 = [
   { num: 1, title: "Новые герои", url: "https://m.vkvideo.ru/playlist/-234589463_5/video-234589463_456239052?from=video&linked=1&t=4s" },
@@ -60,17 +61,18 @@ const cartoons = [
 ];
 
 const tvChannels = [
-  { name: "Россия 1", emoji: "📺", color: "#dc2626" },
-  { name: "НТВ", emoji: "🎬", color: "#16a34a" },
-  { name: "Россия 24", emoji: "📡", color: "#2563eb" },
-  { name: "Пятый канал", emoji: "5️⃣", color: "#7c3aed" },
-  { name: "РЕН ТВ", emoji: "🔥", color: "#ea580c" },
-  { name: "СТС", emoji: "⭐", color: "#0891b2" },
-  { name: "ТНТ", emoji: "🎭", color: "#d97706" },
-  { name: "Матч ТВ", emoji: "⚽", color: "#15803d" },
-  { name: "Культура", emoji: "🎨", color: "#9333ea" },
-  { name: "ОТР", emoji: "🏛️", color: "#0f766e" },
-  { name: "ТВК", emoji: "📻", color: "#b45309" },
+  { name: "Первый канал", emoji: "1️⃣", color: "#dc2626", hlsUrl: "http://rt-vlg-nn-htlive.cdn.ngenix.net/hls/CH_R03_OTT_VLG_NN_1TV/variant.m3u8?version=2" },
+  { name: "Россия 1", emoji: "📺", color: "#c2410c", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/0/russia1-hd/index.m3u8" },
+  { name: "НТВ", emoji: "🎬", color: "#16a34a", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_NTV/variant.m3u8" },
+  { name: "Россия 24", emoji: "📡", color: "#2563eb", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/abakan/russia24-sd/index.m3u8" },
+  { name: "Пятый канал", emoji: "5️⃣", color: "#7c3aed", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_5TV/variant.m3u8" },
+  { name: "РЕН ТВ", emoji: "🔥", color: "#ea580c", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_RENTV/variant.m3u8" },
+  { name: "СТС", emoji: "⭐", color: "#0891b2", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_STS/variant.m3u8" },
+  { name: "ТНТ", emoji: "🎭", color: "#d97706", hlsUrl: "https://streaming.televizor-24-tochka.ru/live/38.m3u8" },
+  { name: "Матч ТВ", emoji: "⚽", color: "#15803d", hlsUrl: "" },
+  { name: "Культура", emoji: "🎨", color: "#9333ea", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/0/kultura-hd/index.m3u8" },
+  { name: "ОТР", emoji: "🏛️", color: "#0f766e", hlsUrl: "" },
+  { name: "ТВК", emoji: "📻", color: "#b45309", hlsUrl: "" },
 ];
 
 function getVkEmbedUrl(url: string): string {
@@ -94,6 +96,7 @@ export default function Index() {
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeChannel, setActiveChannel] = useState<typeof tvChannels[0] | null>(null);
 
   const allSearchItems = [
     ...cartoons.map(c => ({ type: "cartoon" as const, label: c.title, data: c })),
@@ -445,9 +448,12 @@ export default function Index() {
                 {tvChannels.map(ch => (
                   <button
                     key={ch.name}
-                    onClick={() => setActiveSection("tv")}
-                    className="flex-shrink-0 flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
+                    onClick={() => ch.hlsUrl ? setActiveChannel(ch) : setActiveSection("tv")}
+                    className="flex-shrink-0 flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all relative"
                   >
+                    {ch.hlsUrl && (
+                      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                    )}
                     <span className="text-2xl">{ch.emoji}</span>
                     <span className="text-xs text-white/60 text-center leading-tight px-1">{ch.name}</span>
                   </button>
@@ -473,12 +479,17 @@ export default function Index() {
         {!selectedCartoon && activeSection === "tv" && (
           <div className="animate-fade-in">
             <h1 className="font-oswald font-bold text-3xl text-white mb-2">ТВ-каналы</h1>
-            <p className="text-white/40 text-sm mb-7">Федеральные каналы — скоро появится прямое вещание</p>
+            <p className="text-white/40 text-sm mb-7">Нажмите на канал, чтобы смотреть прямой эфир</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {tvChannels.map(ch => (
-                <div
+                <button
                   key={ch.name}
-                  className="bg-[#141927] rounded-2xl p-5 border transition-all hover:bg-[#1a2035] group cursor-pointer"
+                  onClick={() => ch.hlsUrl ? setActiveChannel(ch) : null}
+                  className={`bg-[#141927] rounded-2xl p-5 border transition-all text-left group ${
+                    ch.hlsUrl
+                      ? "hover:bg-[#1a2035] hover:shadow-lg cursor-pointer"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
                   style={{ borderColor: `${ch.color}20` }}
                 >
                   <div
@@ -488,11 +499,18 @@ export default function Index() {
                     {ch.emoji}
                   </div>
                   <div className="font-semibold text-white text-base mb-1">{ch.name}</div>
-                  <div className="flex items-center gap-1.5 text-xs text-white/30 group-hover:text-[#f59e0b]/60 transition-colors">
-                    <Icon name="Clock" size={12} />
-                    <span>Скоро</span>
-                  </div>
-                </div>
+                  {ch.hlsUrl ? (
+                    <div className="flex items-center gap-1.5 text-xs transition-colors group-hover:text-[#f59e0b]" style={{ color: `${ch.color}99` }}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <span>Прямой эфир</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-xs text-white/25">
+                      <Icon name="Clock" size={12} />
+                      <span>Скоро</span>
+                    </div>
+                  )}
+                </button>
               ))}
             </div>
           </div>
@@ -555,6 +573,15 @@ export default function Index() {
           </div>
         )}
       </main>
+
+      {/* HLS PLAYER OVERLAY */}
+      {activeChannel && (
+        <HlsPlayer
+          url={activeChannel.hlsUrl}
+          channelName={activeChannel.name}
+          onClose={() => setActiveChannel(null)}
+        />
+      )}
 
       <footer className="border-t border-white/5 mt-16 py-8 text-center text-white/25 text-sm">
         <span className="font-oswald font-bold text-white/40">ПОЕХАЛИ</span>
