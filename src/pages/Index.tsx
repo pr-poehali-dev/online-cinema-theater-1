@@ -62,18 +62,18 @@ const cartoons = [
 ];
 
 const tvChannels = [
-  { name: "Первый канал", emoji: "1️⃣", color: "#dc2626", hlsUrl: "http://rt-vlg-nn-htlive.cdn.ngenix.net/hls/CH_R03_OTT_VLG_NN_1TV/variant.m3u8?version=2" },
-  { name: "Россия 1", emoji: "📺", color: "#c2410c", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/0/russia1-hd/index.m3u8" },
-  { name: "НТВ", emoji: "🎬", color: "#16a34a", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_NTV/variant.m3u8" },
-  { name: "Россия 24", emoji: "📡", color: "#2563eb", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/abakan/russia24-sd/index.m3u8" },
-  { name: "Пятый канал", emoji: "5️⃣", color: "#7c3aed", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_5TV/variant.m3u8" },
-  { name: "РЕН ТВ", emoji: "🔥", color: "#ea580c", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_RENTV/variant.m3u8" },
-  { name: "СТС", emoji: "⭐", color: "#0891b2", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_STS/variant.m3u8" },
-  { name: "ТНТ", emoji: "🎭", color: "#d97706", hlsUrl: "https://streaming.televizor-24-tochka.ru/live/38.m3u8" },
-  { name: "Матч ТВ", emoji: "⚽", color: "#15803d", hlsUrl: "" },
-  { name: "Культура", emoji: "🎨", color: "#9333ea", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/0/kultura-hd/index.m3u8" },
-  { name: "ОТР", emoji: "🏛️", color: "#0f766e", hlsUrl: "" },
-  { name: "ТВК", emoji: "📻", color: "#b45309", hlsUrl: "" },
+  { name: "Первый канал", emoji: "1️⃣", color: "#dc2626", logo: "https://cdn.poehali.dev/projects/d349c98d-057e-4569-9a59-641fbcea3d21/bucket/bcb693ab-0166-42e9-8020-c256cc11dcd9.jpeg", hlsUrl: "http://rt-vlg-nn-htlive.cdn.ngenix.net/hls/CH_R03_OTT_VLG_NN_1TV/variant.m3u8?version=2" },
+  { name: "Россия 1", emoji: "📺", color: "#c2410c", logo: "https://cdn.poehali.dev/projects/d349c98d-057e-4569-9a59-641fbcea3d21/bucket/bcda580a-da19-47ec-bd9f-117479ff67ba.jpeg", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/0/russia1-hd/index.m3u8" },
+  { name: "НТВ", emoji: "🎬", color: "#16a34a", logo: "https://cdn.poehali.dev/projects/d349c98d-057e-4569-9a59-641fbcea3d21/bucket/c834031f-1b15-430e-9d3a-d8d6680fd7ab.jpeg", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_NTV/variant.m3u8" },
+  { name: "Россия 24", emoji: "📡", color: "#2563eb", logo: "https://cdn.poehali.dev/projects/d349c98d-057e-4569-9a59-641fbcea3d21/bucket/6e115bc9-5f87-42d5-a3a3-b7cac6634deb.jpeg", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/abakan/russia24-sd/index.m3u8" },
+  { name: "Пятый канал", emoji: "5️⃣", color: "#7c3aed", logo: "https://cdn.poehali.dev/projects/d349c98d-057e-4569-9a59-641fbcea3d21/bucket/a40dce21-d658-43b7-a8ba-5ab66a212fc0.jpeg", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_5TV/variant.m3u8" },
+  { name: "РЕН ТВ", emoji: "🔥", color: "#ea580c", logo: "", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_RENTV/variant.m3u8" },
+  { name: "СТС", emoji: "⭐", color: "#0891b2", logo: "", hlsUrl: "https://zabava-htlive.cdn.ngenix.net/hls/CH_STS/variant.m3u8" },
+  { name: "ТНТ", emoji: "🎭", color: "#d97706", logo: "", hlsUrl: "https://streaming.televizor-24-tochka.ru/live/38.m3u8" },
+  { name: "Матч ТВ", emoji: "⚽", color: "#15803d", logo: "", hlsUrl: "" },
+  { name: "Культура", emoji: "🎨", color: "#9333ea", logo: "", hlsUrl: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/0/kultura-hd/index.m3u8" },
+  { name: "ОТР", emoji: "🏛️", color: "#0f766e", logo: "", hlsUrl: "" },
+  { name: "ТВК", emoji: "📻", color: "#b45309", logo: "", hlsUrl: "" },
 ];
 
 function getVkEmbedUrl(url: string): string {
@@ -459,7 +459,11 @@ export default function Index() {
                     {ch.hlsUrl && (
                       <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                     )}
-                    <span className="text-2xl">{ch.emoji}</span>
+                    {ch.logo ? (
+                      <img src={ch.logo} alt={ch.name} className="w-10 h-10 rounded-xl object-cover" />
+                    ) : (
+                      <span className="text-2xl">{ch.emoji}</span>
+                    )}
                     <span className="text-xs text-white/60 text-center leading-tight px-1">{ch.name}</span>
                   </button>
                 ))}
@@ -498,10 +502,14 @@ export default function Index() {
                   style={{ borderColor: `${ch.color}20` }}
                 >
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 overflow-hidden"
                     style={{ background: `${ch.color}15` }}
                   >
-                    {ch.emoji}
+                    {ch.logo ? (
+                      <img src={ch.logo} alt={ch.name} className="w-full h-full object-cover" />
+                    ) : (
+                      ch.emoji
+                    )}
                   </div>
                   <div className="font-semibold text-white text-base mb-1">{ch.name}</div>
                   {ch.hlsUrl ? (
